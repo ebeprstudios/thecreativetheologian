@@ -297,15 +297,25 @@ nav.scrolled {
   z-index: 1;
 }
 
-#heroVideo {
+/* ── YOUTUBE HERO BG ── */
+.yt-bg {
   position: absolute;
-  inset: -5%;
-  width: 110%; height: 110%;
-  object-fit: cover;
+  inset: 0;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}
+.yt-bg iframe {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 177.78vh;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 56.25vw;
+  transform: translate(-50%, -50%);
   opacity: 0.45;
   filter: saturate(0.3) brightness(0.6);
-  display: none;
-  z-index: 2;
+  pointer-events: none;
 }
 
 .hero-overlay {
@@ -405,32 +415,7 @@ nav.scrolled {
   animation: ldFadeIn 0.8s ease 3.6s forwards;
 }
 
-/* Upload + Scroll */
-.hero-upload-label {
-  position: absolute;
-  bottom: 44px; right: 56px;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(10,10,10,0.6);
-  border: 1px solid rgba(196,180,154,0.16);
-  color: var(--muted);
-  padding: 12px 22px;
-  font-family: 'Jost', sans-serif;
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  cursor: none;
-  backdrop-filter: blur(12px);
-  transition: all 0.35s ease;
-  opacity: 0;
-  animation: ldFadeIn 0.7s ease 4s forwards;
-}
-.hero-upload-label:hover { border-color: rgba(196,180,154,0.45); color: var(--cream); }
-.hero-upload-label svg { width: 13px; height: 13px; flex-shrink: 0; }
-#videoFileInput { display: none; }
+/* Upload label removed — YouTube bg used instead */
 
 .hero-scroll-cue {
   position: absolute;
@@ -1476,13 +1461,33 @@ footer {
     <li><a href="#archive">Stories</a></li>
     <li><a href="#sermon">Notes</a></li>
   </ul>
-  <a class="nav-cta" href="pages/submit.html">Submit Your Work</a>
+  <a class="nav-cta" href="submit.html">Submit Your Work</a>
 </nav>
 
 <!-- ── HERO ─────────────────────────────── -->
 <section id="hero">
   <div class="hero-depth hero-bg" id="heroBg"></div>
-  <video id="heroVideo" autoplay muted loop playsinline></video>
+
+  <!--
+  ═══════════════════════════════════════════
+  HERO VIDEO — UPDATE THIS YOUTUBE VIDEO ID
+  1. Go to your YouTube video
+  2. Copy the video ID from the URL
+     e.g. youtube.com/watch?v=dQw4w9WgXcQ
+                                ^^^^^^^^^^^^ this part
+  3. Replace YOUTUBE_VIDEO_ID below with it
+  ═══════════════════════════════════════════
+  -->
+  <div class="yt-bg">
+    <iframe
+      id="ytBg"
+      src="https://www.youtube.com/embed/YOUTUBE_VIDEO_ID?autoplay=1&mute=1&loop=1&playlist=YOUTUBE_VIDEO_ID&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen
+    ></iframe>
+  </div>
+
   <div class="hero-overlay"></div>
   <div class="hero-glow" id="heroGlow"></div>
 
@@ -1499,14 +1504,6 @@ footer {
   <div class="hero-scroll-cue">
     <div class="scroll-line"></div>
   </div>
-
-  <label class="hero-upload-label" id="uploadLabel">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
-    </svg>
-    Upload Hero Video
-    <input type="file" id="videoFileInput" accept="video/*">
-  </label>
 </section>
 
 <!-- ── TICKER ───────────────────────────── -->
@@ -1847,7 +1844,7 @@ footer {
     "We're looking for artists, filmmakers, poets, designers, and musicians 
     who make things at the intersection of faith and form."
   </p>
-  <a class="btn-magnetic reveal d4" href="pages/submit.html" id="submitBtn">
+  <a class="btn-magnetic reveal d4" href="submit.html" id="submitBtn">
     <span>Submit Your Work</span>
   </a>
 </section>
@@ -1875,7 +1872,7 @@ footer {
         <div class="fnc">
           <h5>Network</h5>
           <ul>
-            <li><a href="pages/submit.html">Submit Your Work</a></li>
+            <li><a href="submit.html">Submit Your Work</a></li>
             <li><a href="#">Collaborate</a></li>
             <li><a href="#">Pitch Deck</a></li>
             <li><a href="#">About</a></li>
@@ -2026,30 +2023,6 @@ footer {
 
   revealEls.forEach(el => ro.observe(el));
   clipTitles.forEach(el => ro.observe(el));
-
-  // ── VIDEO UPLOAD ─────────────────────
-  const videoInput = document.getElementById('videoFileInput');
-  const heroVideo  = document.getElementById('heroVideo');
-  const heroBgEl   = document.getElementById('heroBg');
-  const uploadLabel = document.getElementById('uploadLabel');
-
-  videoInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    heroVideo.src = URL.createObjectURL(file);
-    heroVideo.style.display = 'block';
-    heroBgEl.style.display  = 'none';
-    heroVideo.play().catch(() => {});
-    uploadLabel.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:13px;height:13px;flex-shrink:0;">
-        <path d="M5 13l4 4L19 7"/>
-      </svg>
-      Video Active
-      <input type="file" id="videoFileInput" accept="video/*" style="display:none;">
-    `;
-    document.getElementById('videoFileInput')
-      .addEventListener('change', arguments.callee);
-  });
 
   // ── DRAG-TO-SCROLL (REEL) ────────────
   const track = document.getElementById('reelTrack');
