@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ─── UPDATE THESE FOR EVERY NOTE ─── -->
+<title>Note Title — Sermon Notes — the creative theologian</title>
+<meta name="description" content="Short description of this note for search and sharing.">
+<meta property="og:title" content="Note Title — the creative theologian">
+<meta property="og:description" content="Scripture reference and brief description.">
+<meta property="og:image" content="../assets/images/NOTE-COVER-IMAGE.jpg">
+<!-- ─────────────────────────────────── -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #0A0A0A;
+  --surface: #111111;
+  --card:    #161616;
+  --border:  #272220;
+  --cream:   #E8DDD0;
+  --muted:   #9E8E7E;
+  --taupe:   #7A6B5D;
+  --linen:   #C4B49A;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black); color: var(--cream);
+  font-family: 'Jost', sans-serif; font-weight: 300;
+  overflow-x: hidden; cursor: none;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  z-index: 9000; pointer-events: none; opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* Cursor */
+.c-dot {
+  position: fixed; width: 5px; height: 5px;
+  background: var(--cream); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s ease, opacity 0.25s ease;
+}
+.c-ring {
+  position: fixed; width: 30px; height: 30px;
+  border: 1px solid rgba(232,221,208,0.28); border-radius: 50%;
+  pointer-events: none; z-index: 9997;
+  transform: translate(-50%,-50%);
+  transition: width 0.4s var(--ease-out), height 0.4s var(--ease-out);
+}
+body.on-link .c-dot { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+body.on-link .c-ring { width: 52px; height: 52px; border-color: rgba(196,180,154,0.45); }
+
+#scrollBar {
+  position: fixed; top: 0; left: 0;
+  height: 1px; width: 0%; background: var(--linen); z-index: 9999;
+}
+
+/* ─── NAV ───────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 500; padding: 28px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: padding 0.5s ease, background 0.5s ease, border-color 0.5s ease;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(10,10,10,0.93);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  padding: 16px 60px; border-bottom-color: var(--border);
+}
+.nav-logo { text-decoration: none; display: flex; flex-direction: column; gap: 1px; }
+.nav-logo .l-the {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px; font-style: italic; color: var(--taupe); letter-spacing: 0.2em;
+}
+.nav-logo .l-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 500;
+  color: var(--cream); text-transform: lowercase; letter-spacing: 0.03em;
+}
+.nav-back {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+  transition: color 0.3s ease, gap 0.3s ease;
+}
+.nav-back::before { content: '←'; }
+.nav-back:hover { color: var(--cream); gap: 16px; }
+
+/* ─── NOTE HERO ─────────────────────── */
+.note-hero {
+  position: relative;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 160px 60px 80px;
+  overflow: hidden;
+}
+.note-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 50%, rgba(196,180,154,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 80%, rgba(122,107,93,0.04) 0%, transparent 40%);
+}
+
+.note-hero-inner { position: relative; z-index: 2; max-width: 800px; }
+
+.note-num-row {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+}
+.note-num {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+  font-style: italic; letter-spacing: 0.2em; color: var(--taupe);
+}
+.note-series {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--taupe);
+}
+
+/* Large scripture that appears before the title */
+.note-scripture-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(13px, 1.5vw, 17px);
+  font-style: italic; font-weight: 300;
+  color: var(--linen); letter-spacing: 0.06em;
+  margin-bottom: 16px; display: block;
+}
+
+.note-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 5vw, 68px);
+  font-weight: 300; color: var(--cream);
+  line-height: 1.08; letter-spacing: -0.015em;
+  margin-bottom: 24px;
+}
+
+.note-deck {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 1.8vw, 22px);
+  font-style: italic; font-weight: 300;
+  color: var(--muted); line-height: 1.65; max-width: 600px;
+}
+
+/* ─── COVER IMAGE ───────────────────── */
+.note-cover { width: 100%; max-height: 480px; overflow: hidden; }
+.note-cover img {
+  width: 100%; display: block;
+  filter: saturate(0.28) brightness(0.68);
+}
+.note-cover-placeholder {
+  width: 100%; height: 360px;
+  background: linear-gradient(145deg, #1C1810, #252018, #1C1810);
+  display: flex; align-items: center; justify-content: center;
+}
+.note-cover-placeholder span {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--taupe); letter-spacing: 0.1em; opacity: 0.5;
+}
+
+/* ─── NOTE LAYOUT ───────────────────── */
+.note-layout {
+  display: grid;
+  grid-template-columns: 1fr min(720px, 100%) 1fr;
+  padding: 80px 0 120px;
+}
+.note-layout > * { grid-column: 2; }
+
+/* ─── SCRIPTURE BLOCK ───────────────── */
+.scripture-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--linen);
+  padding: 36px 40px;
+  margin: 0 60px 52px;
+  position: relative;
+}
+.scripture-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(19px, 2vw, 26px);
+  font-style: italic; font-weight: 300;
+  color: var(--cream); line-height: 1.65;
+  margin-bottom: 16px;
+}
+.scripture-ref {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--linen);
+}
+
+/* ─── NOTE TYPOGRAPHY ───────────────── */
+article { padding: 0 60px; }
+
+article p {
+  font-family: 'Jost', sans-serif;
+  font-size: 16px; font-weight: 300;
+  color: var(--muted); line-height: 2; margin-bottom: 26px;
+  letter-spacing: 0.01em;
+}
+
+article p:first-of-type {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 2.1vw, 25px);
+  font-weight: 400; color: var(--cream);
+  line-height: 1.7; margin-bottom: 40px;
+}
+
+article h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 2.8vw, 38px); font-weight: 300;
+  color: var(--cream); text-transform: lowercase; line-height: 1.15;
+  margin: 60px 0 22px;
+}
+
+article h3 {
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 300;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--linen);
+  margin: 44px 0 18px;
+}
+
+/* Pull quote */
+article blockquote {
+  border-left: 1px solid var(--linen);
+  padding: 8px 0 8px 32px;
+  margin: 48px 0;
+}
+article blockquote p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 2.3vw, 30px);
+  font-style: italic; color: var(--cream);
+  line-height: 1.55; margin: 0;
+}
+article blockquote cite {
+  display: block; margin-top: 14px;
+  font-family: 'DM Mono', monospace; font-size: 10px; font-style: normal;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--taupe);
+}
+
+/* Point / Application callout */
+.note-point {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 28px 32px; margin: 40px 0;
+}
+.note-point-label {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--linen);
+  display: block; margin-bottom: 12px;
+}
+.note-point p {
+  font-family: 'Jost', sans-serif; font-size: 15px; font-weight: 300;
+  color: var(--cream); line-height: 1.9; margin: 0;
+}
+
+/* Reflection questions */
+.reflection-block {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 0; margin: 52px 0;
+}
+.reflection-label {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+  letter-spacing: 0.34em; text-transform: uppercase; color: var(--muted);
+  display: block; margin-bottom: 28px;
+}
+.reflection-block ol {
+  list-style: none; counter-reset: q; display: flex; flex-direction: column; gap: 20px;
+}
+.reflection-block ol li {
+  counter-increment: q;
+  display: flex; gap: 18px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(17px, 1.8vw, 22px); font-style: italic;
+  color: var(--cream); line-height: 1.5;
+}
+.reflection-block ol li::before {
+  content: counter(q, decimal-leading-zero);
+  font-family: 'DM Mono', monospace; font-size: 10px; font-style: normal;
+  color: var(--taupe); letter-spacing: 0.1em; padding-top: 3px; flex-shrink: 0;
+}
+
+article hr { border: none; border-top: 1px solid var(--border); margin: 56px 0; }
+
+.selah {
+  display: block; text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 14px;
+  color: var(--taupe); letter-spacing: 0.4em;
+  margin: 60px 0;
+}
+
+/* Inline image */
+.note-img { margin: 48px -60px; overflow: hidden; }
+.note-img img {
+  width: 100%; display: block;
+  filter: saturate(0.3) brightness(0.72);
+}
+.note-img figcaption {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--taupe); padding: 10px 60px 0;
+}
+
+/* ─── FOOTER ──────────────────────────── */
+footer {
+  background: var(--black); border-top: 1px solid var(--border);
+  padding: 60px; display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 20px;
+}
+.foot-brand .fb-the {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 12px; color: var(--taupe);
+  letter-spacing: 0.15em; display: block;
+}
+.foot-brand .fb-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300; color: var(--cream);
+  text-transform: lowercase; display: block;
+}
+.foot-right {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.16em; color: var(--taupe);
+}
+
+/* Reveals */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  nav, nav.scrolled { padding-left: 28px; padding-right: 28px; }
+  .note-hero { padding-left: 28px; padding-right: 28px; }
+  article { padding: 0 28px; }
+  .scripture-block, .note-img { margin-left: 28px; margin-right: 28px; }
+  .note-img { margin-left: -28px; margin-right: -28px; }
+  .note-img figcaption { padding: 8px 28px 0; }
+  footer { padding: 44px 28px 36px; flex-direction: column; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="c-dot" id="cDot"></div>
+<div class="c-ring" id="cRing"></div>
+<div id="scrollBar"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="../index.html">
+    <span class="l-the">the</span>
+    <span class="l-main">creative theologian</span>
+  </a>
+  <a class="nav-back" href="../index.html">Back to Home</a>
+</nav>
+
+<!-- ── NOTE HERO ──────────────────────── -->
+<div class="note-hero">
+  <div class="note-hero-inner reveal">
+    <div class="note-num-row">
+      <!-- UPDATE: Note number and series name -->
+      <span class="note-num">Note 001</span>
+      <span class="note-series">· Sermon Notes</span>
+    </div>
+    <!-- UPDATE: Scripture reference -->
+    <span class="note-scripture-display">2 Corinthians 4:17</span>
+    <!-- UPDATE: Note title -->
+    <h1 class="note-title">The Weight of Glory<br>Is Not Heavy</h1>
+    <!-- UPDATE: Brief deck / description -->
+    <p class="note-deck">
+      What if the burden isn't the problem — what if it's pointing to something permanent?
+    </p>
+  </div>
+</div>
+
+<!-- ── COVER IMAGE ──────────────────────
+     Real image:
+     <div class="note-cover">
+       <img src="../assets/images/note-001-cover.jpg" alt="Description">
+     </div>
+─────────────────────────────────────── -->
+<div class="note-cover">
+  <div class="note-cover-placeholder">
+    <span>cover photograph</span>
+  </div>
+</div>
+
+<!-- ── NOTE BODY ──────────────────────── -->
+<div class="note-layout">
+
+  <!-- SCRIPTURE BLOCK -->
+  <div class="scripture-block reveal">
+    <!-- UPDATE: Full scripture text -->
+    <p class="scripture-text">
+      "For our light and momentary troubles are achieving for us an eternal glory 
+      that far outweighs them all."
+    </p>
+    <!-- UPDATE: Reference -->
+    <span class="scripture-ref">2 Corinthians 4:17 · NIV</span>
+  </div>
+
+  <article class="reveal">
+
+    <!--
+    ═══════════════════════════════════════
+    WRITING YOUR NOTE — QUICK REFERENCE
+
+    • First <p> auto-styles as large lead text
+    • <h2> = main section header (lowercase)
+    • <h3> = sub-point label (uppercase mono)
+    • <blockquote> = pull quote
+    • .note-point = application/key point callout box
+    • .reflection-block = questions for reflection
+    • <span class="selah"> = quiet pause marker
+    • .note-img = inline photograph
+    ═══════════════════════════════════════
+    -->
+
+    <!-- LEAD — auto-styled large -->
+    <p>
+      Paul doesn't say the trouble is light. He says it's producing something. 
+      The weight isn't the point — what it's achieving is the point. 
+      That's a completely different way to hold suffering.
+    </p>
+
+    <p>
+      Replace this with your actual sermon notes. Write from your own voice — 
+      honest, grounded, not preachy. Let the scripture do the heavy lifting.
+    </p>
+
+    <h2>what we get wrong about burden</h2>
+
+    <p>
+      Continue your notes here. Each section can have multiple paragraphs. 
+      Write naturally — the way you'd explain it to one specific person.
+    </p>
+
+    <!-- PULL QUOTE -->
+    <blockquote>
+      <p>"The burden is not the destination. It's the road."</p>
+    </blockquote>
+
+    <!-- KEY POINT CALLOUT -->
+    <div class="note-point">
+      <span class="note-point-label">Key Point</span>
+      <p>
+        Glory is not the absence of weight — it's what the weight was always moving toward. 
+        The eternal outweighs the momentary, but only if we stay in it long enough to see.
+      </p>
+    </div>
+
+    <h2>the creative application</h2>
+
+    <p>
+      This is a good spot to connect the scripture to the creative life specifically. 
+      How does this apply to making things — to craft, to calling, to the work?
+    </p>
+
+    <span class="selah">— Selah —</span>
+
+    <!-- REFLECTION QUESTIONS -->
+    <div class="reflection-block">
+      <span class="reflection-label">Questions for Reflection</span>
+      <ol>
+        <li>Where in your creative work are you treating the burden as the final word?</li>
+        <li>What might it mean for your art if the weight was producing something?</li>
+        <li>What does "eternal glory" look like in your specific area of craft?</li>
+      </ol>
+    </div>
+
+    <p>
+      Close the note with a final thought or prayer prompt. Something that sits 
+      with the reader after they close the page.
+    </p>
+
+  </article>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-brand">
+    <span class="fb-the">the</span>
+    <span class="fb-main">creative theologian</span>
+  </div>
+  <p class="foot-right">© 2025 the creative theologian · all rights reserved</p>
+</footer>
+
+<script>
+(function(){
+  const sb = document.getElementById('scrollBar');
+  window.addEventListener('scroll', () => {
+    sb.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+  }, { passive: true });
+
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50), { passive: true });
+
+  const dot = document.getElementById('cDot');
+  const ring = document.getElementById('cRing');
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  if (!isTouch) {
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    });
+    (function loop(){
+      rx += (mx - rx) * 0.11; ry += (my - ry) * 0.11;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('on-link'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('on-link'));
+    });
+  } else { dot.style.display = ring.style.display = 'none'; }
+
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+})();
+</script>
+</body>
+</html>

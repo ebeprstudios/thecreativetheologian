@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ─── UPDATE THESE FOR EVERY POST ─── -->
+<title>Post Title — the creative theologian</title>
+<meta name="description" content="A short description of this post for search engines and social sharing.">
+<meta property="og:title" content="Post Title — the creative theologian">
+<meta property="og:description" content="A short description of this post.">
+<meta property="og:image" content="../assets/images/POST-COVER-IMAGE.jpg">
+<meta property="og:type" content="article">
+<!-- ─────────────────────────────────── -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<style>
+
+/* ─── TOKENS ───────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #0A0A0A;
+  --surface: #111111;
+  --card:    #161616;
+  --border:  #272220;
+  --cream:   #E8DDD0;
+  --muted:   #9E8E7E;
+  --taupe:   #7A6B5D;
+  --linen:   #C4B49A;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Grain */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.038;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ─── CURSOR ────────────────────────── */
+.c-dot {
+  position: fixed; width: 5px; height: 5px;
+  background: var(--cream); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s ease, opacity 0.25s ease;
+}
+.c-ring {
+  position: fixed; width: 30px; height: 30px;
+  border: 1px solid rgba(232,221,208,0.28); border-radius: 50%;
+  pointer-events: none; z-index: 9997;
+  transform: translate(-50%,-50%);
+  transition: width 0.4s var(--ease-out), height 0.4s var(--ease-out), border-color 0.35s ease;
+}
+body.on-link .c-dot { transform: translate(-50%,-50%) scale(0); opacity: 0; }
+body.on-link .c-ring { width: 52px; height: 52px; border-color: rgba(196,180,154,0.45); }
+
+/* ─── SCROLL BAR ────────────────────── */
+#scrollBar {
+  position: fixed; top: 0; left: 0;
+  height: 1px; width: 0%;
+  background: var(--linen); z-index: 9999;
+}
+
+/* ─── NAV ───────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 500; padding: 28px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: padding 0.5s ease, background 0.5s ease, border-color 0.5s ease;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(10,10,10,0.93);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 16px 60px;
+  border-bottom-color: var(--border);
+}
+.nav-logo { text-decoration: none; display: flex; flex-direction: column; gap: 1px; }
+.nav-logo .l-the {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px; font-style: italic; font-weight: 300;
+  color: var(--taupe); letter-spacing: 0.2em;
+}
+.nav-logo .l-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 500;
+  color: var(--cream); text-transform: lowercase; letter-spacing: 0.03em;
+}
+.nav-back {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+  transition: color 0.3s ease, gap 0.3s ease;
+}
+.nav-back::before { content: '←'; }
+.nav-back:hover { color: var(--cream); gap: 16px; }
+
+/* ─── POST HERO ─────────────────────── */
+.post-hero {
+  position: relative;
+  padding: 160px 60px 90px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.post-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(196,180,154,0.07) 0%, transparent 55%),
+    var(--surface);
+}
+
+.post-hero-inner {
+  position: relative; z-index: 2;
+  max-width: 860px;
+}
+
+.post-meta-row {
+  display: flex; align-items: center; gap: 20px;
+  margin-bottom: 28px;
+}
+
+.post-category {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--linen);
+  border: 1px solid rgba(196,180,154,0.22);
+  padding: 5px 12px;
+}
+
+.post-date {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+  letter-spacing: 0.2em; color: var(--taupe);
+}
+
+.post-read-time {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+  letter-spacing: 0.2em; color: var(--taupe);
+}
+
+.post-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 5.5vw, 72px);
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin-bottom: 28px;
+}
+
+.post-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-style: italic; font-weight: 300;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+/* ─── COVER IMAGE ────────────────────── */
+.post-cover {
+  width: 100%;
+  max-height: 580px;
+  overflow: hidden;
+  position: relative;
+}
+
+.post-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(0.35) brightness(0.75);
+  display: block;
+}
+
+/* Placeholder when no image yet */
+.post-cover-placeholder {
+  width: 100%; height: 480px;
+  background: linear-gradient(145deg, #1C1810 0%, #262018 50%, #1C1810 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.post-cover-placeholder span {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 13px;
+  color: var(--taupe); letter-spacing: 0.1em; opacity: 0.55;
+}
+
+/* ─── ARTICLE LAYOUT ─────────────────── */
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr min(720px, 100%) 1fr;
+  padding: 80px 0 120px;
+}
+
+.post-layout > * { grid-column: 2; }
+
+/* Full-bleed elements break out of the column */
+.post-layout .bleed { grid-column: 1 / -1; }
+.post-layout .wide  { grid-column: 1 / -1; padding: 0 60px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+/* ─── ARTICLE TYPOGRAPHY ─────────────── */
+article {
+  padding: 0 60px;
+}
+
+article p {
+  font-family: 'Jost', sans-serif;
+  font-size: 17px; font-weight: 300;
+  color: var(--muted);
+  line-height: 2;
+  margin-bottom: 28px;
+  letter-spacing: 0.01em;
+}
+
+article p:first-of-type {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+article h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.15;
+  text-transform: lowercase;
+  margin: 64px 0 24px;
+}
+
+article h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--cream);
+  margin: 48px 0 20px;
+}
+
+/* Pull quote */
+article blockquote {
+  border-left: 1px solid var(--linen);
+  padding: 8px 0 8px 36px;
+  margin: 52px 0;
+}
+article blockquote p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 2.5vw, 32px);
+  font-style: italic; font-weight: 300;
+  color: var(--cream);
+  line-height: 1.55;
+  margin: 0;
+  letter-spacing: -0.005em;
+}
+article blockquote cite {
+  display: block; margin-top: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; font-style: normal;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--taupe);
+}
+
+/* Horizontal rule */
+article hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 60px 0;
+}
+
+/* Divider character */
+article .selah {
+  display: block; text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 14px;
+  color: var(--taupe); letter-spacing: 0.4em;
+  margin: 64px 0;
+}
+
+/* ─── INLINE IMAGES ──────────────────── */
+/* Full-width image inside article */
+.post-img {
+  margin: 52px -60px;          /* Bleed out of article padding */
+  position: relative;
+  overflow: hidden;
+}
+
+.post-img img {
+  width: 100%; height: auto;
+  display: block;
+  filter: saturate(0.38) brightness(0.78);
+}
+
+.post-img figcaption {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; font-weight: 300;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--taupe);
+  padding: 12px 60px 0;
+}
+
+/* Half-width image (float-style — stacks on mobile) */
+.post-img-half {
+  float: right;
+  width: 46%;
+  margin: 8px 0 28px 36px;
+  overflow: hidden;
+}
+.post-img-half img {
+  width: 100%; display: block;
+  filter: saturate(0.38) brightness(0.78);
+}
+.post-img-half figcaption {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--taupe);
+  margin-top: 8px;
+}
+
+/* ─── DIVIDER LINE ────────────────────── */
+.section-rule {
+  width: 40px; height: 1px;
+  background: var(--border);
+  margin: 0 60px 0;
+}
+
+/* ─── AUTHOR / BYLINE ─────────────────── */
+.post-byline {
+  display: flex; align-items: center; gap: 20px;
+  padding: 40px 60px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 80px;
+  background: var(--surface);
+}
+
+.byline-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, #1C1810, #262018);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.byline-avatar img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.3); }
+
+.byline-info {}
+.byline-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 400; color: var(--cream);
+  display: block; margin-bottom: 3px;
+}
+.byline-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; font-weight: 300;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--taupe);
+}
+
+/* ─── RELATED POSTS ───────────────────── */
+.related {
+  padding: 0 60px 100px;
+}
+.related-label {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+  letter-spacing: 0.34em; text-transform: uppercase; color: var(--muted);
+  display: block; margin-bottom: 10px;
+}
+.related-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.5vw, 44px); font-weight: 300;
+  color: var(--cream); text-transform: lowercase; line-height: 1;
+  margin-bottom: 40px;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.related-card {
+  background: var(--card); border: 1px solid var(--border);
+  text-decoration: none; color: inherit; overflow: hidden;
+  transition: border-color 0.4s ease;
+  position: relative;
+}
+.related-card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(to right, var(--linen), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+}
+.related-card:hover::before { transform: scaleX(1); }
+.related-card:hover { border-color: rgba(196,180,154,0.25); }
+
+.rc-img {
+  aspect-ratio: 16/9; overflow: hidden;
+  background: linear-gradient(145deg, #1C1810, #262018);
+}
+.rc-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: saturate(0.28) brightness(0.7);
+  transition: filter 0.5s ease, transform 0.5s ease;
+}
+.related-card:hover .rc-img img { filter: saturate(0.4) brightness(0.78); transform: scale(1.04); }
+
+.rc-body { padding: 20px 22px 24px; }
+.rc-tag {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 300;
+  letter-spacing: 0.28em; text-transform: uppercase; color: var(--linen);
+  display: block; margin-bottom: 8px;
+}
+.rc-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 1.4vw, 20px); font-weight: 400;
+  color: var(--cream); line-height: 1.25;
+}
+
+/* ─── FOOTER ──────────────────────────── */
+footer {
+  background: var(--black);
+  border-top: 1px solid var(--border);
+  padding: 60px 60px 44px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.foot-brand .fb-the {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 12px; color: var(--taupe);
+  letter-spacing: 0.15em; display: block;
+}
+.foot-brand .fb-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 300;
+  color: var(--cream); text-transform: lowercase;
+  display: block;
+}
+.foot-right {
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 300;
+  letter-spacing: 0.16em; color: var(--taupe);
+}
+
+/* ─── RESPONSIVE ─────────────────────── */
+@media (max-width: 900px) {
+  nav, nav.scrolled { padding-left: 28px; padding-right: 28px; }
+  .post-hero { padding-left: 28px; padding-right: 28px; }
+  article { padding: 0 28px; }
+  .post-img { margin: 40px -28px; }
+  .post-img figcaption { padding: 10px 28px 0; }
+  .post-img-half { float: none; width: 100%; margin: 24px 0; }
+  .section-rule, .post-byline { padding-left: 28px; padding-right: 28px; }
+  .related { padding-left: 28px; padding-right: 28px; }
+  .related-grid { grid-template-columns: 1fr; }
+  footer { padding: 48px 28px 36px; flex-direction: column; gap: 12px; }
+}
+
+/* ─── REVEALS ────────────────────────── */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="c-dot" id="cDot"></div>
+<div class="c-ring" id="cRing"></div>
+<!-- Scroll bar -->
+<div id="scrollBar"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a class="nav-logo" href="../index.html">
+    <span class="l-the">the</span>
+    <span class="l-main">creative theologian</span>
+  </a>
+  <a class="nav-back" href="../index.html">Back to Home</a>
+</nav>
+
+<!-- ── POST HERO ──────────────────────── -->
+<div class="post-hero">
+  <div class="post-hero-bg"></div>
+  <div class="post-hero-inner reveal">
+
+    <div class="post-meta-row">
+      <!-- UPDATE: Change category and date -->
+      <span class="post-category">Feature · Interview</span>
+      <span class="post-date">April 20, 2025</span>
+      <span class="post-read-time">· 8 min read</span>
+    </div>
+
+    <!-- UPDATE: Your post title -->
+    <h1 class="post-title">What Does It Mean to Create<br>from a Place of Surrender?</h1>
+
+    <!-- UPDATE: Your subtitle / deck -->
+    <p class="post-subtitle">
+      A conversation with Mia Crews — poet, artist, and the first creative featured on the network.
+    </p>
+
+  </div>
+</div>
+
+<!-- ── COVER IMAGE ──────────────────────
+     Option A: Real image
+     <div class="post-cover">
+       <img src="../assets/images/mia-crews-cover.jpg" alt="Mia Crews">
+     </div>
+
+     Option B: No image yet (placeholder shown)
+─────────────────────────────────────── -->
+<div class="post-cover">
+  <div class="post-cover-placeholder">
+    <span>cover photograph</span>
+  </div>
+</div>
+
+<!-- ── BYLINE ─────────────────────────── -->
+<div class="post-byline reveal">
+  <div class="byline-avatar">
+    <!-- <img src="../assets/images/author-avatar.jpg" alt="Erica Ehiwe"> -->
+  </div>
+  <div class="byline-info">
+    <!-- UPDATE: Author name and role -->
+    <span class="byline-name">Erica Ehiwe</span>
+    <span class="byline-role">Founder · The Creative Theologian</span>
+  </div>
+</div>
+
+<!-- ── ARTICLE BODY ───────────────────── -->
+<div class="post-layout">
+  <article class="reveal">
+
+    <!--
+    ═══════════════════════════════════════
+    WRITING YOUR POST — QUICK REFERENCE
+
+    • First <p> auto-styles as a large lead paragraph
+    • Use <h2> for main section breaks
+    • Use <h3> for sub-points (italic)
+    • Use <blockquote> for pull quotes
+    • Use <hr> for a horizontal rule break
+    • Use <span class="selah">— Selah —</span> for a quiet pause
+    • Use .post-img for full-width images
+    • Use .post-img-half for side images
+    ═══════════════════════════════════════
+    -->
+
+    <!-- LEAD PARAGRAPH — auto-styled large -->
+    <p>
+      Mia Crews writes from graveyards. Not literally — but the images in her poetry 
+      carry the weight of things that have died, the quiet of things waiting to be raised. 
+      She sat with us and talked about craft, calling, and what it means to hold beauty 
+      and sorrow in the same breath.
+    </p>
+
+    <!-- BODY PARAGRAPHS -->
+    <p>
+      We met on a Tuesday morning, the kind of overcast day that feels like it's waiting 
+      for something. Mia arrived early, tea already in hand, a worn copy of 
+      Lamentations on the table. That detail felt right.
+    </p>
+
+    <!-- FULL-WIDTH IMAGE
+    <figure class="post-img">
+      <img src="../assets/images/mia-crews-interview.jpg" alt="Mia Crews in conversation">
+      <figcaption>Mia Crews — Atlanta, April 2025</figcaption>
+    </figure>
+    -->
+
+    <h2>on making things that hurt</h2>
+
+    <p>
+      Replace this with your actual interview content, reflections, or story.
+      Write naturally. This is your voice — editorial, honest, not performative.
+    </p>
+
+    <!-- PULL QUOTE -->
+    <blockquote>
+      <p>"I don't write to process. I write because the image demands to exist."</p>
+      <cite>— Mia Crews</cite>
+    </blockquote>
+
+    <p>
+      Continue the body copy here. Each paragraph renders at the right size, 
+      weight, and line-height automatically.
+    </p>
+
+    <h3>the signature question</h3>
+
+    <p>
+      We ask every creative the same question to close every interview.
+    </p>
+
+    <p>
+      <em style="font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--cream);">
+        "What does being a Creative Theologian mean to you?"
+      </em>
+    </p>
+
+    <p>
+      She was quiet for a moment. Then: "It means I can't separate my faith from 
+      my craft. They're the same act. Both are about paying attention."
+    </p>
+
+    <!-- QUIET PAUSE -->
+    <span class="selah">— Selah —</span>
+
+    <p>
+      Add a closing paragraph or reflection here. End on something that stays 
+      with the reader — not a summary, but a final image.
+    </p>
+
+  </article>
+</div>
+
+<!-- ── RELATED POSTS ───────────────────── -->
+<div class="related reveal">
+  <span class="related-label">continue reading</span>
+  <h2 class="related-title">more from the archive</h2>
+
+  <div class="related-grid">
+
+    <!-- UPDATE: Link to 3 related posts -->
+    <a class="related-card" href="#">
+      <div class="rc-img"></div>
+      <div class="rc-body">
+        <span class="rc-tag">Reflection</span>
+        <h3 class="rc-title">The Potter Doesn't Rush the Wheel</h3>
+      </div>
+    </a>
+
+    <a class="related-card" href="#">
+      <div class="rc-img"></div>
+      <div class="rc-body">
+        <span class="rc-tag">Story</span>
+        <h3 class="rc-title">Selah — What Happens When You Stop</h3>
+      </div>
+    </a>
+
+    <a class="related-card" href="#">
+      <div class="rc-img"></div>
+      <div class="rc-body">
+        <span class="rc-tag">Design · Art</span>
+        <h3 class="rc-title">Bold Art Series — Vol. I</h3>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── FOOTER ──────────────────────────── -->
+<footer>
+  <div class="foot-brand">
+    <span class="fb-the">the</span>
+    <span class="fb-main">creative theologian</span>
+  </div>
+  <p class="foot-right">© 2025 the creative theologian · all rights reserved</p>
+</footer>
+
+<!-- ── SCRIPTS ─────────────────────────── -->
+<script>
+(function(){
+  // Scroll bar
+  const sb = document.getElementById('scrollBar');
+  window.addEventListener('scroll', () => {
+    sb.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+  }, { passive: true });
+
+  // Nav scroll
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  // Custom cursor
+  const dot = document.getElementById('cDot');
+  const ring = document.getElementById('cRing');
+  const isTouch = window.matchMedia('(hover: none)').matches;
+
+  if (!isTouch) {
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    });
+    (function loop(){
+      rx += (mx - rx) * 0.11;
+      ry += (my - ry) * 0.11;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('on-link'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('on-link'));
+    });
+  } else {
+    dot.style.display = ring.style.display = 'none';
+  }
+
+  // Scroll reveals
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+})();
+</script>
+</body>
+</html>
